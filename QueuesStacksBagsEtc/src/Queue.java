@@ -1,13 +1,8 @@
 package QueuesStacksBagsEtc.src;
 
-import QueuesStacksBagsEtc.src.QueueADT;
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 public class Queue<K> implements QueueADT<K>, Iterable<K>{
     private K[] elements;
@@ -21,7 +16,7 @@ public class Queue<K> implements QueueADT<K>, Iterable<K>{
     @Override
     public K dequeue(){
         K ret = elements[elements.length-1];
-        elements = slice(elements,1,elements.length-1);
+        elements = slice(elements,0,elements.length-1);
         return ret;
     }
 
@@ -70,16 +65,26 @@ public class Queue<K> implements QueueADT<K>, Iterable<K>{
     @Override
     public Iterator<K> iterator() {
         return new Iterator<>(){
-            private int i = 0;
+            private int i = elements.length-1;
 
             public boolean hasNext() {
-                return i < elements.length;
+                return i >= 0;
             }
 
             public K next() {
                 if (!hasNext()) throw new NoSuchElementException();
-                return elements[i++];
+                return elements[i--];
             }
         };
+    }
+    public static void main(String[] args){
+        Queue<String> queue1 = new Queue<>();
+        queue1.enqueue("hello");
+        queue1.enqueue("nothing");
+        queue1.enqueue("goodbye");
+        int n = queue1.size();
+        for(int i = 0; i < n; i++){
+            System.out.println(queue1.dequeue());
+        }
     }
 }

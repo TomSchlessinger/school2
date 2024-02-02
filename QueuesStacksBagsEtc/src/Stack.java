@@ -75,4 +75,15 @@ public class Stack<K> implements Iterable<K>{
             }
         };
     }
+
+    public static void main(String[] args){
+        Stack<String> queue1 = new Stack<>();
+        queue1.push("hello");
+        queue1.push("nothing");
+        queue1.push("goodbye");
+        int j = queue1.size();
+        for(int i = 0; i < j; i++){
+            System.out.println(queue1.pop());
+        }
+    }
 }

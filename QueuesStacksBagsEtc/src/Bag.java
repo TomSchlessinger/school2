@@ -58,5 +58,14 @@ public class Bag<K> implements Iterable<K>{
             }
         };
     }
-
+    public static void main(String[] args){
+        Bag<String> queue1 = new Bag<>();
+        queue1.add("hello");
+        queue1.add("nothing");
+        queue1.add("goodbye");
+        int j = queue1.size();
+        for(String i : queue1){
+            System.out.println(i);
+        }
+    }
 }
