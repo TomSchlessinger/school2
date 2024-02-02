@@ -1,0 +1,98 @@
+/*************************************************************************
+*****
+* Name: Tom Schlessinger
+*
+* Hours to complete assignment (optional):
+* 15 minutes(Wolfram Language) 2-10 hours (java)
+*************************************************************************
+*****/
+2.2.2 Permutations of size k
+/*************************************************************************
+*****
+* Describe in layman terms how you implemented PermutationsK_YI.java .
+* I used a recursive program(implemented by my nest() function) to find every combination of characters in the sublist given and add them to the string over and over again
+so I first start with a list of {""} and a array of characters {'a','b','c'...} of length k
+I then create a 2d array containing k of the original array and add 'a','b','c'... to each one
+I then flatten the 2d array to a 1d array and delete any strings with duplicate letters
+by mapping my deleteDuplicate() function on a split version of each string and checking to see if the
+output of that function is the same length as the original.
+I then ran this function n times on the outputted array
+*************************************************************************
+****/
+/*************************************************************************
+*****
+* How did you check
+* whether the program works 100%?
+I made a factorial function and made sure to check and see if there are k!/(n-k)! combinations for
+obscenely large values of n and k
+(the only problem was k! doesnt work when k is too large)
+*************************************************************************
+****/
+/*************************************************************************
+*****
+* After reading the course collaboration policy, answer the following
+* questions in the space provided. This counts for a portion of your
+grade.
+*************************************************************************
+****/
+Chose the correct response for each:
+1. b
+2. c
+3. b
+1. How much help can you give a fellow student taking this class?
+(a) None. Only mrs.e can help.
+(b) You can discuss ideas and concepts but students can get help
+debugging their code only from mrs.e or student who has already
+succesfully passed this class.
+(c) You can help a student by discussing ideas, selecting data structures,
+and debugging their code.
+(d) You can help a student by emailing him/her your code.
+2. What are the rules when partnering?
+(a) You and your partner must both be present while writing code.
+But after that only one person needs to do the analysis.
+(b) You and your partner must both be present while writing code
+and during the analysis, but, after that, only one person
+needs to be present while submitting the code and the
+readme.
+(c) You and your partner must both be present while writing code,
+during the analysis, and while submitting the code and the
+readme unless you have a written exception from mrs.e
+Failure to do so is a violation of the course collaboration policy.
+3. For any programming assignment, I am permitted to use code that
+I found on a website other than the COS 226 or algs4 website
+(e.g., on GitHub or StackOverflow):
+(a) Only when the online code was written by a person who does not
+and did not go to Princeton.
+(b) Only when the online code implemented different assignment
+specifications than the ones I'm currently working on.
+(c) Always, because online code is available to everyone.
+(d) Never, because such websites are an impermissible "outside
+source".
+/*************************************************************************
+*****
+k must be >= n
+if k or n are too big it breaks because integer too big and/or not enough memory
+*************************************************************************
+****/
+/*************************************************************************
+*****
+* Describe whatever help (if any) that you received.
+* Don't include readings, lectures, and videos, but do
+* include any help from people (including
+* classmates, and friends) and attribute them by name.
+I HAD NO HELP
+*************************************************************************
+****/
+/*************************************************************************
+*****
+* Describe any serious problems you encountered.
+when transferring my code from wolfram language, many of the functions simply didn't exist,
+so I had to code them myself!!!
+*************************************************************************
+****/
+/*************************************************************************
+*****
+Shoutout to Tom Schlessinger https://github.com/tomschlessinger
+for creating a library of mathematica functions https://github.com/TomSchlessinger/MathFuncs
+*************************************************************************
+****/
