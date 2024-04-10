@@ -61,15 +61,19 @@ public class RadixSort {
     }
 
     public static void main(String[] args) {
-        int n = args[0]!=null ? Integer.parseInt(args[0]) : 100;
-        Integer[] arr = new Integer[n];
-        Random r = new Random();
-        for(int i = 0; i < n; i++) {
-            arr[i] = Math.abs(r.nextInt(0,100));
+        for (int i : MathFuncs.range(10)){
+            if(i%2==0)continue;
+            System.out.println(i);
         }
-
-        System.out.println("Unsorted Array: " + Arrays.toString(arr));
-        //System.out.println("Sorted Array:" + Arrays.toString(radixSort(arr,10)));
-        System.out.println("Sorted Array:" + Arrays.toString(inPlaceRadixSort(arr,10)));
+//        int n = args[0]!=null ? Integer.parseInt(args[0]) : 100;
+//        Integer[] arr = new Integer[n];
+//        Random r = new Random();
+//        for(int i = 0; i < n; i++) {
+//            arr[i] = Math.abs(r.nextInt(0,100));
+//        }
+//
+//        System.out.println("Unsorted Array: " + Arrays.toString(arr));
+//        //System.out.println("Sorted Array:" + Arrays.toString(radixSort(arr,10)));
+//        System.out.println("Sorted Array:" + Arrays.toString(inPlaceRadixSort(arr,10)));
     }
 }
