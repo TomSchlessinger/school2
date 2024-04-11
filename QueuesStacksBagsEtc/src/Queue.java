@@ -1,8 +1,9 @@
 package QueuesStacksBagsEtc.src;
 
+import util.MathFuncs;
+
 import java.lang.reflect.Array;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class Queue<K> implements QueueADT<K>, Iterable<K>{
     private K[] elements;
@@ -10,11 +11,12 @@ public class Queue<K> implements QueueADT<K>, Iterable<K>{
         elements = (K[])new Object[]{};
     }
     public Queue(K[] init){
-        elements = init;
+        elements = MathFuncs.reverse(init);
     }
 
     @Override
     public K dequeue(){
+        if(elements.length == 0)return null;
         K ret = elements[elements.length-1];
         elements = slice(elements,0,elements.length-1);
         return ret;
@@ -36,14 +38,21 @@ public class Queue<K> implements QueueADT<K>, Iterable<K>{
         System.arraycopy(elements, 0, ret, 1, elements.length);
         elements=ret;
     }
-
+    public void set(Iterable<K> items){
+        clear();
+        for(K i : items)enqueue(i);
+    }
+    public void set(K[] items){
+        clear();
+        for(K i : items)enqueue(i);
+    }
     @Override
     public String toString(){
-        StringBuilder s = new StringBuilder();
-        for(K i : elements){
-            s.append(i.toString());
+        StringBuilder s = new StringBuilder().append("[");
+        for(int i = 0; i < elements.length; i++){
+            s.append(elements[i].toString()).append(i==elements.length-1?"":", ");
         }
-        return s.toString();
+        return s.append("]").toString();
     }
 
     public static <K> K[] slice(K[] init, int start, int end){
@@ -60,6 +69,9 @@ public class Queue<K> implements QueueADT<K>, Iterable<K>{
         return elements.length==0;
     }
     public K[] asArray(){return elements;}
+    public void clear(){
+        elements =  (K[])new Object[]{};
+    }
 
 
     @Override
@@ -82,9 +94,12 @@ public class Queue<K> implements QueueADT<K>, Iterable<K>{
         queue1.enqueue("hello");
         queue1.enqueue("nothing");
         queue1.enqueue("goodbye");
+        System.out.println(queue1);
         int n = queue1.size();
         for(int i = 0; i < n; i++){
             System.out.println(queue1.dequeue());
         }
+        queue1 = new Queue<>(new String[]{"hello","nothing","goodbye"});
+        System.out.println(queue1);
     }
 }

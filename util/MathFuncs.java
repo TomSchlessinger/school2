@@ -14,7 +14,6 @@ public class MathFuncs {
         K[] ret = (K[]) Array.newInstance(init.get(0).getClass().getComponentType(), 0);
         return init.toArray(ret);
     }
-    @org.jetbrains.annotations.NotNull
     public static <T> T[] flatten2d(T[] [] arr){
         List<T> streamList = new ArrayList<>();
         for (T[] array : arr) {
