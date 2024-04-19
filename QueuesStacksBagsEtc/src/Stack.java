@@ -1,6 +1,8 @@
 package QueuesStacksBagsEtc.src;
 
-import org.jetbrains.annotations.NotNull;
+
+
+import util.MathFuncs;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
@@ -14,7 +16,7 @@ public class Stack<K> implements Iterable<K>{
         elements = (K[])new Object[]{};
     }
     public Stack(K[] init){
-        elements = init;
+        elements = MathFuncs.reverse(init);
     }
     public K pop(){
         K ret = elements[0];
@@ -42,11 +44,11 @@ public class Stack<K> implements Iterable<K>{
     }
     @Override
     public String toString(){
-        StringBuilder s = new StringBuilder();
-        for(K i : elements){
-            s.append(i.toString()).append(" ");
+        StringBuilder s = new StringBuilder().append("[");
+        for(int i = 0; i < elements.length; i++){
+            s.append(elements[i].toString()).append(i==elements.length-1?"":", ");
         }
-        return s.toString();
+        return s.append("]").toString();
     }
 
     public static <K> K[] slice(K[] init, int start, int end){
@@ -81,9 +83,12 @@ public class Stack<K> implements Iterable<K>{
         queue1.push("hello");
         queue1.push("nothing");
         queue1.push("goodbye");
+        System.out.println(queue1);
         int j = queue1.size();
         for(int i = 0; i < j; i++){
             System.out.println(queue1.pop());
         }
+        queue1 = new Stack<>(new String[]{"hello","nothing","goodbye"});
+        System.out.println(queue1);
     }
 }
