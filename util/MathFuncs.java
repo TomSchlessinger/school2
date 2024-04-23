@@ -1,5 +1,7 @@
 package util;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Function;
@@ -165,6 +167,20 @@ public class MathFuncs {
         K[] b = (K[]) Array.newInstance(init[0].getClass(), 0);
         return ret1.toArray(b);
     }
+    //when I need to ill make a version of this for doubles, bytes, chars, etc.
+    public static int[] deleteDuplicates(int[] init) {
+        List<Integer> list = new ArrayList<>();
+        for(int i : init){
+            list.add(i);
+        }
+        List<Integer> ret = new ArrayList<>(new HashSet<>(list));
+        int[] ret1 = new int[ret.size()];
+        for(int i = 0; i < ret.size(); i++){
+            ret1[i] = ret.get(i);
+        }
+        return ret1;
+    }
+
     public static String deleteDuplicates(String init){
         Character[] fin = new Character[init.length()];
         for(int i = 0; i < init.length();i++){
@@ -270,5 +286,42 @@ public class MathFuncs {
     public static <R> boolean in(R item, Collection<R> array){
         for(R i: array)if(i.equals(item))return true;
         return false;
+    }
+
+    public static Integer[] toInteger(int[] init){
+        Integer[] ret = new Integer[init.length];
+        for(int i = 0; i < init.length; i ++){
+            ret[i]=init[i];
+        }
+        return ret;
+    }
+
+    public static int[] toInt(Collection<Integer> init){
+        int[] ret = new int[init.size()];
+        int counter = 0;
+        for(Integer i : init)
+            ret[counter++] = i;
+        return ret;
+    }
+    public static List<Integer> randomList(int len){
+        return randomList(len,Integer.MAX_VALUE);
+    }
+
+    public static List<Integer> randomList(int len, int max){
+        return randomList(len,0,max);
+    }
+
+    public static List<Integer> randomList(int len, int min, int max){
+        return randomList(len,-1, min,max);
+    }
+
+    public static List<Integer> randomList(int len, int seed, int min, int max){
+        Random random;
+        random = seed == -1 ? new Random() : new Random(seed);
+        List<Integer> ret = new ArrayList<>();
+        for(int i = 0; i < len; i++){
+            ret.add(random.nextInt(min,max));
+        }
+        return ret;
     }
 }
