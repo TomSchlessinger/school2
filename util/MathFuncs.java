@@ -25,6 +25,19 @@ public class MathFuncs {
         T[] ret = (T[]) Array.newInstance(arr[0].getClass().getComponentType(), 0);
         return streamList.toArray(ret);
     }
+    public static byte[] flatten2dbyte(byte[][] arr){
+        List<Byte> streamList = new ArrayList<>();
+        for(byte[] array: arr){
+            for(byte i : array){
+                streamList.add(i);
+            }
+        }
+        byte[] ret = new byte[streamList.size()];
+        for(int i = 0; i < ret.length; i++){
+            ret[i]=streamList.get(i);
+        }
+        return ret;
+    }
 
     public static <T> T[] join(T [] l1, T [] l2){
         List<T> joined = new ArrayList<>(l1.length + l2.length);

@@ -13,6 +13,12 @@ import java.util.Random;
 import java.util.Set;
 
 public class Percolation {
+
+    private static final byte OPEN = 4;
+    private static final byte TOP = 2;
+    private static final byte BOTTOM = 1;
+
+    private boolean percolates = false;
     private final byte[][] grid;
     private final WeightedQuickUnionUF uf;
     private int opened = 0;//number of open
@@ -23,57 +29,57 @@ public class Percolation {
         grid = new byte[n][n];
     }
     public void open(int r, int c){
-        if(!validate(r, c) || isOpen(r, c))return;
-        grid[r][c] |= 4;//turn the 3rd bit to a 1; opens
+        if(isOpen(r, c))return;
+        byte delta = OPEN;
         opened++;
-        if(r == 0){
-            grid[r][c] |= 1;//turn the 1st bit to a 1
-            uf.union(0,c);
-        }
-        if(r == n-1){
-            grid[r][c] |= 2;
-        }
-        tick(r, c,0,1);
-        tick(r, c,0,-1);
-        tick(r, c,1,0);
-        tick(r, c,-1,0);
-    }
-//    private void tick(int row, int col, int dRow, int dCol) {
-//        if(!validate(row+dRow,col+dCol))return;
-//        if(!isOpen(row + dRow,col + dCol))return;
-//        int ind1 = row*n+col;
-//        int ind2 = (row+dRow)*n+(col+dCol);
-//        int p = uf.find(ind1);
-//        int q = uf.find(ind2);
-//        if (isOpen(q / n,q % n)) {
-//            grid[q / n][q % n] |= grid[p/n][p%n];
-//            uf.union(ind1, ind2);//see if 3rd bit is 1
-//        }
-////        grid[row][col] |= grid[row + dRow][col + dCol];
-////        grid[p/n][p%n] |= grid[q/n][q%n];
-//    }
-    private void tick(int row, int col, int dRow, int dCol) {
-        if (!validate(row + dRow, col + dCol)) return; // Check if the neighboring site is valid
-        //if (!isOpen(row + dRow, col + dCol)) return; // Check if the neighboring site is open
-        int ind1 = row * n + col;
-        int ind2 = (row + dRow) * n + (col + dCol);
+        if(r == 0) delta |= TOP;
+        if(r == n-1) delta |= BOTTOM;
+
+        int ind1 = r*n+c;
         int p = uf.find(ind1);
+        delta|=update(r,c,r,c+1);//dRow = 0
+        delta|=update(r,c,r,c-1);//dRow = 0
+        delta|=update(r,c,r+1,c);//dCol = 0
+        delta|=update(r,c,r-1,c);//dCol = 0
+        percolates = percolates || Math.abs((delta^3)-2) == 2;//last 2 bits of delta are both 1 --> delta ^3 == 4 or 0; abs (4-2) = abs(0-2) = 2
+        grid[r][c] |= delta;
+        grid[p / n][p % n] |= delta;
+
+
+    }
+    private byte update(int row, int col, int newRow, int newCol) {
+        int dCol = 0, dRow = 0;
+        if(col > 0 && col < n-1 && row > 0 && row < n-1)return 0;
+        if(!validate(newRow,newCol) || !isOpen(newRow,newCol))return 0;
+        System.out.println("row is " + row);
+        System.out.println("col is " + col);
+        System.out.println("new row is " + newRow);
+        System.out.println("new col is " + newCol);
+        if(col > 0 || col < n-1)dCol = newCol-col;
+        if(row > 0 || row < n-1)dRow = newRow-row;
+        if(row != newRow && dRow == 0)return 0;
+        if(col != newCol && dCol == 0)return 0;
+        System.out.println("check 1");
+        int ind2 = (row + dRow) * n + (col + dCol);
         int q = uf.find(ind2);
-        grid[p / n][p % n] |= grid[q / n][q % n]; // Update the bitmask for the connected site
-        uf.union(p, q);
-//        if (isOpen(q / n,q % n)) {
-//            grid[q / n][q % n] |= grid[p/n][p%n];
-//            uf.union(ind1, ind2);//see if 3rd bit is 1
-//        }
+        uf.union(row*n+col, ind2);
+        return grid[q/n][q%n];
     }
 
     private boolean validate(int row, int col){
         return row >= 0 && col >= 0 && row < n && col < n;
     }
+    private boolean inBounds(int row, int col){
+        return row >= 0 && col >= 0 && row < n && col < n;
+    }
     public boolean isOpen(int row, int col){return grid[row][col] >> 2 == 1;}
+    public boolean isFull(int row, int col) {
+        int i = uf.find(row*n+col);
+        return grid[i/n][i%n] >> 2 == 1;
+    }
     public int getOpened(){return opened;}
     public boolean percolates(){
-        return grid[uf.find(0)/n][uf.find(0)%n] >=5;
+        return percolates;
     }
     public byte get(int row, int col){return grid[row][col];}
     public int getSize(){return n;}
@@ -81,27 +87,12 @@ public class Percolation {
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < n; i++){
             for(int j = 0; j < n; j++){
-                byte b = get(i,j);
-                builder.append(b >> 2 == 1 ? (b >= 5 ? "🟦":"⬜") : "⬛");//i love the ternary operator
+                byte b = grid[i][j];
+                builder.append(b >> 2 == 1 ? (b == 5 ? "🟦": b==6 ? "🟥": b==7?"🟪":"⬜") : "⬛");//i love the ternary operator
             }
             builder.append("\n");
         }
         return builder.toString();
-    }
-
-    public static int[] generate(int[] usedx, int[] usedy, int max){//generate new pair of indexes
-        //max should be >= max(usedx) and >= max(usedy); usedx and usedy should only contain positive integers
-        Set<Integer> uniqueX = new HashSet<>(List.of(MathFuncs.toInteger(usedx)));
-        Set<Integer> uniqueY = new HashSet<>(List.of(MathFuncs.toInteger(usedy)));
-        Set<Integer> rangeX = new HashSet<>(List.of(MathFuncs.range(max)));
-        Set<Integer> rangeY = new HashSet<>(rangeX);
-        rangeX.removeAll(uniqueX);
-        rangeY.removeAll(uniqueY);
-        Random random = new Random();
-        return new int[]{
-                MathFuncs.toInt(rangeX)[random.nextInt(rangeX.size())],
-                MathFuncs.toInt(rangeY)[random.nextInt(rangeY.size())]
-        };
     }
 
     public static void main(String[] args) {
