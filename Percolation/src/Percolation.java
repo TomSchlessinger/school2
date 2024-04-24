@@ -50,9 +50,6 @@ public class Percolation {
     private byte update(int row, int col, int newRow, int newCol) {
         int dCol = 0, dRow = 0;
         if(col > 0 && col < n-1 && row > 0 && row < n-1)return 0;
-        if(!validate(newRow,newCol) || !isOpen(newRow,newCol))return 0;
-        System.out.println("row is " + row);
-        System.out.println("col is " + col);
         System.out.println("new row is " + newRow);
         System.out.println("new col is " + newCol);
         if(col > 0 || col < n-1)dCol = newCol-col;
@@ -61,6 +58,9 @@ public class Percolation {
         if(col != newCol && dCol == 0)return 0;
         System.out.println("check 1");
         int ind2 = (row + dRow) * n + (col + dCol);
+        if(!validate(newRow,newCol) || !isOpen(newRow,newCol))return 0;
+        System.out.println("row is " + row);
+        System.out.println("col is " + col);
         int q = uf.find(ind2);
         uf.union(row*n+col, ind2);
         return grid[q/n][q%n];
