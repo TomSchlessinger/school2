@@ -24,38 +24,56 @@ public class Percolation {
     }
     public void open(int r, int c){
         if(!validate(r, c) || isOpen(r, c))return;
-        grid[r][c] |= 4;//turn the 3rd bit to a 1
+        grid[r][c] |= 4;//turn the 3rd bit to a 1; opens
         opened++;
-        if(r == n-1)grid[r][c] |= 1;//turn the 1st bit to a 1
         if(r == 0){
-            uf.union(0, c);
-            grid[0][0] |= 2;//turn the 2nd bit to a 1
+            grid[r][c] |= 1;//turn the 1st bit to a 1
+            uf.union(0,c);
+        }
+        if(r == n-1){
+            grid[r][c] |= 2;
         }
         tick(r, c,0,1);
         tick(r, c,0,-1);
         tick(r, c,1,0);
         tick(r, c,-1,0);
     }
+//    private void tick(int row, int col, int dRow, int dCol) {
+//        if(!validate(row+dRow,col+dCol))return;
+//        if(!isOpen(row + dRow,col + dCol))return;
+//        int ind1 = row*n+col;
+//        int ind2 = (row+dRow)*n+(col+dCol);
+//        int p = uf.find(ind1);
+//        int q = uf.find(ind2);
+//        if (isOpen(q / n,q % n)) {
+//            grid[q / n][q % n] |= grid[p/n][p%n];
+//            uf.union(ind1, ind2);//see if 3rd bit is 1
+//        }
+////        grid[row][col] |= grid[row + dRow][col + dCol];
+////        grid[p/n][p%n] |= grid[q/n][q%n];
+//    }
     private void tick(int row, int col, int dRow, int dCol) {
-        if(!validate(row+dRow,col+dCol))return;
-        if(!isOpen(row+dRow,col+dCol))return;
-        int ind1 = row*n+col;//i reused this a couple of times so ima just store this here
-        int ind2 = (row+dRow)*n+(col+dCol);
+        if (!validate(row + dRow, col + dCol)) return; // Check if the neighboring site is valid
+        //if (!isOpen(row + dRow, col + dCol)) return; // Check if the neighboring site is open
+        int ind1 = row * n + col;
+        int ind2 = (row + dRow) * n + (col + dCol);
         int p = uf.find(ind1);
         int q = uf.find(ind2);
-        uf.union(ind1, ind2);
-        if (isOpen(p / n,p % n) || isOpen(q / n, q % n)) {//see if 3rd bit is 1
-            int t = uf.find(ind2);
-            grid[t / n][t % n] |= 1;
-        }
+        grid[p / n][p % n] |= grid[q / n][q % n]; // Update the bitmask for the connected site
+        uf.union(p, q);
+//        if (isOpen(q / n,q % n)) {
+//            grid[q / n][q % n] |= grid[p/n][p%n];
+//            uf.union(ind1, ind2);//see if 3rd bit is 1
+//        }
     }
+
     private boolean validate(int row, int col){
         return row >= 0 && col >= 0 && row < n && col < n;
     }
     public boolean isOpen(int row, int col){return grid[row][col] >> 2 == 1;}
     public int getOpened(){return opened;}
     public boolean percolates(){
-        return grid[uf.find(0)/n][uf.find(0)%n] >= 4;
+        return grid[uf.find(0)/n][uf.find(0)%n] >=5;
     }
     public byte get(int row, int col){return grid[row][col];}
     public int getSize(){return n;}
@@ -64,7 +82,7 @@ public class Percolation {
         for(int i = 0; i < n; i++){
             for(int j = 0; j < n; j++){
                 byte b = get(i,j);
-                builder.append(b >> 2 >= 1 ? (b >> 2 == 3 ? "🟦":"⬜") : "⬛");//i love the ternary operator
+                builder.append(b >> 2 == 1 ? (b >= 5 ? "🟦":"⬜") : "⬛");//i love the ternary operator
             }
             builder.append("\n");
         }
@@ -111,7 +129,7 @@ public class Percolation {
         StdOut.println("grid: ");
         for(int i = 0; i < percolation.getSize(); i++){
             for(int j = 0; j < percolation.getSize(); j++){
-                byte b = percolation.get(i+1,j+1);
+                byte b = percolation.get(i,j);
                 StdOut.print(b >> 2 >= 1 ? (b >> 2 == 3 ? "🟦":"⬜") : "⬛");//i love the ternary operator
             }
             StdOut.println();

@@ -9,21 +9,24 @@ import java.util.Random;
 public class PercolationStats {
     private final double[] frac;
     public PercolationStats(int n, int trials) {
-        Random r = new Random();
+        Random r = new Random(1000);
         frac = new double[trials];
         for (int i = 0; i < trials; i++) {
             Percolation percolation = new Percolation(n);
             int openedSites = 0;
-            while (!percolation.percolates()) {
+            int temp = 0;
+            while (!percolation.percolates() && temp < 1500) {
+                temp++;
                 int row = r.nextInt(n);  // base-1
                 int col = r.nextInt(n);  // base-1
                 if (!percolation.isOpen(row, col)) {
                     percolation.open(row, col);
                     openedSites++;
                 }
+                System.out.println(percolation);
             }
-            System.out.println(percolation);
             frac[i] = (double)openedSites / (n * n);
+            System.out.println(temp + "\n" + percolation);
         }
     }
     public double mean() {
